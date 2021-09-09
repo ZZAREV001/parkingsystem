@@ -2,9 +2,7 @@ package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
-import org.apache.logging.log4j.core.util.Clock;
 
-import java.time.Duration;
 
 public class FareCalculatorService {
 
@@ -13,9 +11,9 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
 
-        int inHour = ticket.getInTime().getHours();
+        int inHour = ticket.getInTime().getMinutes();
 
-        int outHour = ticket.getOutTime().getHours();
+        int outHour = ticket.getOutTime().getMinutes();
 
         //TODO: Some tests are failing here. Need to check if this logic is correct
         int duration = outHour - inHour;
