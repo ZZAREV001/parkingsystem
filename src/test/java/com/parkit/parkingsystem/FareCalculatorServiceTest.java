@@ -30,15 +30,19 @@ public class FareCalculatorServiceTest {
 
     @Test
     public void calculateFareCar(){
+        // Initialize with new objects and type the formulas.
         Date inTime = new Date();
         inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
 
+        // Arrange ticket and fare
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
+
+        // Assert price ticket and fare
         assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR);
     }
 
@@ -122,6 +126,79 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
+    }
+
+    @Test
+    public void calculateFareCareLess30min() {
+        // Arrange
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - (30 * 24 * 1000) );
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+
+        // Act
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+
+        // Assert
+        assertEquals( 0, ticket.getPrice());
+    }
+
+    @Test
+    public void calculateFareBikeLess30min() {
+        // Arrange
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - (30 * 24 * 1000) );
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+
+        // Act
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+
+        // Assert
+        assertEquals(0, ticket.getPrice());
+    }
+
+    @Test
+    public void calculateFareCarRecurrentUser () {
+        // Act
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+
+        // Arrange ticket and fare
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+
+        // Assert price ticket and fare
+        assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR * (1 - 0.05));
+
+    }
+
+    @Test
+    public void calculateFareBikeRecurrentUser () {
+        // Act
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
+
+        // Arrange ticket and fare
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+
+        // Assert price ticket and fare
+        assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR * (1 - 0.05));
     }
 
 }
