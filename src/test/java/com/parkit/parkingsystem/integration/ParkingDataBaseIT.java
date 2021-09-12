@@ -1,18 +1,30 @@
 package com.parkit.parkingsystem.integration;
 
+import com.parkit.parkingsystem.config.DataBaseConfig;
+import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
+import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
+import junit.framework.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.OngoingStubbing;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,29 +60,36 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void testParkingACar(){
+    public void testParkingACar() throws SQLException {
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        parkingService.processIncomingVehicle();
         //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
+        DataBaseConfig dataBaseConfig = new DataBaseConfig();
+        Connection con = null;
+        try {
+            con = dataBaseConfig.getConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        assert con != null;
+        PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
 
-        // Initialisation of the class that we test
-
-
-        // GIVEN
-
-
-        // WHEN
-
-
-        // THEN
-
-
+        when(ps.execute());
     }
 
     @Test
-    public void testParkingLotExit(){
+    public void testParkingLotExit() throws SQLException {   // Don't understand what it is tested.
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
+        Connection con = null;
+        Ticket ticket = null;
+        assert con != null;
+        PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
+        ResultSet rs = ps.executeQuery();
+
+        assert ticket != null;
     }
 
 }

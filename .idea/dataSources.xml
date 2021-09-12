@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Projet-4" uuid="191bce51-0e87-4e2f-883d-07536bf5a3b5">
+    <data-source source="LOCAL" name="prod@localhost" uuid="628b4739-98c3-4a90-888f-cd3006e33140">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/prod</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <time-zone>Europe/Paris</time-zone>
+    </data-source>
+    <data-source source="LOCAL" name="MySQL - @localhost" uuid="7b6333de-b00c-4518-bdb5-8c7c93962239">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
+      <time-zone>Europe/Paris</time-zone>
     </data-source>
   </component>
 </project>
