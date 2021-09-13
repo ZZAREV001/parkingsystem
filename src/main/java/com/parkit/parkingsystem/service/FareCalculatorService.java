@@ -2,9 +2,7 @@ package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
-import org.apache.logging.log4j.core.util.Clock;
 
-import java.time.Duration;
 
 public class FareCalculatorService {
 
@@ -16,7 +14,7 @@ public class FareCalculatorService {
         int inHour = ticket.getInTime().getMinutes();
         int outHour = ticket.getOutTime().getMinutes();
 
-        //TODO: Some tests are failing here. Need to check if this logic is correct
+        //TODO: Some tests are failing here. Need to check if this logic is correct (problem: compare hours and minutes?)
         int duration = outHour - inHour;
 
         switch (ticket.getParkingSpot().getParkingType()){
