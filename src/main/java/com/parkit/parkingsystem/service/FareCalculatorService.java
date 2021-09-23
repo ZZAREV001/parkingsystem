@@ -1,7 +1,9 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.Ticket;
+
 
 
 public class FareCalculatorService {
@@ -30,8 +32,28 @@ public class FareCalculatorService {
         }
     }
 
-    public void calculateFareLess30min (Ticket ticket) {
+    public void calculateFareCarLess30min(Ticket ticket) {
+        long inHour = ticket.getInTime().getTime()/1000/60;
+        long outHour = ticket.getOutTime().getTime()/1000/60;
+        long duration = outHour - inHour;
 
+            if (duration < (30 * 30 * 1000)) {
+                ticket.setPrice(duration * 0 / 60);
+            } else
+            throw new IllegalArgumentException("Unknown Parking Type");
+    }
+
+    public void calculateFareBikeLess30min(Ticket ticket) {
+        long inHour = ticket.getInTime().getTime()/1000/60;
+        long outHour = ticket.getOutTime().getTime()/1000/60;
+        long duration = outHour - inHour;
+
+       // if (ParkingType.BIKE) {
+            if (duration < (30 * 30 * 1000)) {
+                ticket.setPrice(duration * 0 / 60);
+            } else
+                throw new IllegalArgumentException("Unknown Parking Type");
+        //}
     }
 
     public void calculateFareRecurrentUser (Ticket ticket) {
