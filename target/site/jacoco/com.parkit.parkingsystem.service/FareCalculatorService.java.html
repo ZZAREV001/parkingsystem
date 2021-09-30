@@ -2,63 +2,64 @@
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.util.InputReaderUtil;
 
 
+<span class="fc" id="L11">public class FareCalculatorService {</span>
 
-<span class="fc" id="L9">public class FareCalculatorService {</span>
+    public void calculateFare(Ticket ticket) {
 
-    public void calculateFare(Ticket ticket){
-<span class="pc bpc" id="L12" title="1 of 4 branches missed.">        if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){</span>
-<span class="fc" id="L13">            throw new IllegalArgumentException(&quot;Out time provided is incorrect:&quot;+ticket.getOutTime().toString());</span>
+        //InputReaderUtil input1 = new InputReaderUtil();
+
+<span class="pc bpc" id="L17" title="1 of 4 branches missed.">        if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {</span>
+<span class="fc" id="L18">            throw new IllegalArgumentException(&quot;Out time provided is incorrect:&quot; + ticket.getOutTime().toString());</span>
         }
 
-<span class="fc" id="L16">        long inHour = ticket.getInTime().getTime()/1000/60;</span>
-<span class="fc" id="L17">        long outHour = ticket.getOutTime().getTime()/1000/60;</span>
+<span class="fc" id="L21">        long inHour = ticket.getInTime().getTime() / 1000 / 60;</span>
+<span class="fc" id="L22">        long outHour = ticket.getOutTime().getTime() / 1000 / 60;</span>
 
-        //TODO: Some tests are failing here. Need to check if this logic is correct (problem: compare hours and minutes?)
-<span class="fc" id="L20">        long duration = outHour - inHour;</span>
+        //TODO: Some tests are failing here. Need to check if this logic is correct (remark: do not create new methods, all code should be here)
+<span class="fc" id="L25">        long duration = outHour - inHour;</span>
 
-<span class="pc bpc" id="L22" title="1 of 3 branches missed.">        switch (ticket.getParkingSpot().getParkingType()){</span>
-            case CAR: {
-<span class="fc" id="L24">                ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR / 60);</span>
-<span class="fc" id="L25">                break;</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if (duration &lt;= 30) {</span>
+<span class="fc" id="L28">            ticket.setPrice(0);</span>
+        } else {
+<span class="pc bpc" id="L30" title="1 of 3 branches missed.">            switch (ticket.getParkingSpot().getParkingType()) {</span>
+                case CAR: {
+<span class="fc" id="L32">                    ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR / 60);</span>
+<span class="fc" id="L33">                    break;</span>
+                }
+                case BIKE: {
+<span class="fc" id="L36">                    ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR / 60);</span>
+<span class="fc" id="L37">                    break;</span>
+                }
+                default:
+<span class="nc" id="L40">                    throw new IllegalArgumentException(&quot;Unknown Parking Type&quot;);</span>
             }
-            case BIKE: {
-<span class="fc" id="L28">                ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR / 60);</span>
-<span class="fc" id="L29">                break;</span>
-            }
-<span class="nc" id="L31">            default: throw new IllegalArgumentException(&quot;Unknown Parking Type&quot;);</span>
         }
-<span class="fc" id="L33">    }</span>
 
-    public void calculateFareCarLess30min(Ticket ticket) {
-<span class="nc" id="L36">        long inHour = ticket.getInTime().getTime()/1000/60;</span>
-<span class="nc" id="L37">        long outHour = ticket.getOutTime().getTime()/1000/60;</span>
-<span class="nc" id="L38">        long duration = outHour - inHour;</span>
-
-<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (duration &lt; (30 * 30 * 1000)) {</span>
-<span class="nc" id="L41">                ticket.setPrice(duration * 0 / 60);</span>
-            } else
-<span class="nc" id="L43">            throw new IllegalArgumentException(&quot;Unknown Parking Type&quot;);</span>
-<span class="nc" id="L44">    }</span>
-
-    public void calculateFareBikeLess30min(Ticket ticket) {
-<span class="nc" id="L47">        long inHour = ticket.getInTime().getTime()/1000/60;</span>
-<span class="nc" id="L48">        long outHour = ticket.getOutTime().getTime()/1000/60;</span>
-<span class="nc" id="L49">        long duration = outHour - inHour;</span>
-
-       // if (ParkingType.BIKE) {
-<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (duration &lt; (30 * 30 * 1000)) {</span>
-<span class="nc" id="L53">                ticket.setPrice(duration * 0 / 60);</span>
-            } else
-<span class="nc" id="L55">                throw new IllegalArgumentException(&quot;Unknown Parking Type&quot;);</span>
-        //}
-<span class="nc" id="L57">    }</span>
-
-    public void calculateFareRecurrentUser (Ticket ticket) {
-
-<span class="nc" id="L61">    }</span>
+      /*  try {
+            if (ticket.getVehicleRegNumber().equals(input1.readVehicleRegistrationNumber())) {
+                switch (ticket.getParkingSpot().getParkingType()) {
+                    case CAR: {
+                        ticket.setPrice(duration * (1 - 0.05) * Fare.CAR_RATE_PER_HOUR);
+                        break;
+                    }
+                    case BIKE: {
+                        ticket.setPrice(duration * (1 - 0.05) * Fare.BIKE_RATE_PER_HOUR);
+                        break;
+                    }
+                    default:
+                        throw new IllegalArgumentException(&quot;Error with fare and type of vehicle&quot;);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } */
+<span class="fc" id="L62">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

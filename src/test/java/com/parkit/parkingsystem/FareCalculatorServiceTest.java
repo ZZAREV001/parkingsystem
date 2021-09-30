@@ -2,6 +2,7 @@ package com.parkit.parkingsystem;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssumptions.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
@@ -141,6 +143,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
 
         // Assert
         assertEquals( 0 , ticket.getPrice());
@@ -158,6 +161,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
 
         // Assert
         assertEquals( 0 , ticket.getPrice());
@@ -165,25 +169,29 @@ public class FareCalculatorServiceTest {
 
     @Test
     public void itShouldCalculateFareCarRecurrentUser() {
-        /*// Act
-        Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (60 * 60 * 1000) );
-        Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+        // Given a user
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+        given(parkingSpot.equals(ticket));
+        // When plate number is present one time in DB
+        // Then assert that this user has received 5% discount on fare
 
-        // Arrange ticket and fare
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket);
-
-        // Assert price ticket and fare
-        assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR * (1 - 0.05));*/
+        /*
+        given(type.parking == car)
+        given(vehicle_reg_number.ticket.isPresentOneTime())
+        when(ticket.(price * (out_time - in_time)))
+        then(price * (1 - 0.05))
+         */
 
     }
 
     @Test
     public void itShouldCalculateFareBikeRecurrentUser() {
+        /*
+        given(type.parking == bike)
+        given(vehicle_reg_number.ticket.isPresentOneTime())
+        when(ticket.(price * (out_time - in_time)))
+        then(price * (1 - 0.05))
+         */
 
     }
 
