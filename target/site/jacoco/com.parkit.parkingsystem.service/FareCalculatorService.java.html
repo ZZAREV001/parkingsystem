@@ -12,7 +12,7 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
 
     public void calculateFare(Ticket ticket) {
 
-        //InputReaderUtil input1 = new InputReaderUtil();
+        // InputReaderUtil input1 = new InputReaderUtil();
 
 <span class="pc bpc" id="L17" title="1 of 4 branches missed.">        if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {</span>
 <span class="fc" id="L18">            throw new IllegalArgumentException(&quot;Out time provided is incorrect:&quot; + ticket.getOutTime().toString());</span>
@@ -41,7 +41,7 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
             }
         }
 
-      /*  try {
+      /*try {
             if (ticket.getVehicleRegNumber().equals(input1.readVehicleRegistrationNumber())) {
                 switch (ticket.getParkingSpot().getParkingType()) {
                     case CAR: {

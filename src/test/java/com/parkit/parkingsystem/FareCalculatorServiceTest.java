@@ -173,6 +173,7 @@ public class FareCalculatorServiceTest {
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
         given(parkingSpot.equals(ticket));
         // When plate number is present one time in DB
+
         // Then assert that this user has received 5% discount on fare
 
         /*

@@ -7,12 +7,13 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
+import static com.parkit.parkingsystem.constants.ParkingType.BIKE;
+import static com.parkit.parkingsystem.constants.ParkingType.CAR;
+
 
 public class FareCalculatorService {
 
     public void calculateFare(Ticket ticket) {
-
-        //InputReaderUtil input1 = new InputReaderUtil();
 
         if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
@@ -20,9 +21,11 @@ public class FareCalculatorService {
 
         long inHour = ticket.getInTime().getTime() / 1000 / 60;
         long outHour = ticket.getOutTime().getTime() / 1000 / 60;
+        TicketDAO ticketDAO = new TicketDAO();
 
         //TODO: Some tests are failing here. Need to check if this logic is correct (remark: do not create new methods, all code should be here)
         long duration = outHour - inHour;
+        // Utiliser la nouvelle méthode isRecurrentUser() de la couche DAO pour tester si l'utilisateur est récurrent (si > 1 retourner true sinon retourner 1).
 
         if (duration <= 30) {
             ticket.setPrice(0);
@@ -41,24 +44,6 @@ public class FareCalculatorService {
             }
         }
 
-      /*  try {
-            if (ticket.getVehicleRegNumber().equals(input1.readVehicleRegistrationNumber())) {
-                switch (ticket.getParkingSpot().getParkingType()) {
-                    case CAR: {
-                        ticket.setPrice(duration * (1 - 0.05) * Fare.CAR_RATE_PER_HOUR);
-                        break;
-                    }
-                    case BIKE: {
-                        ticket.setPrice(duration * (1 - 0.05) * Fare.BIKE_RATE_PER_HOUR);
-                        break;
-                    }
-                    default:
-                        throw new IllegalArgumentException("Error with fare and type of vehicle");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } */
     }
 
 }

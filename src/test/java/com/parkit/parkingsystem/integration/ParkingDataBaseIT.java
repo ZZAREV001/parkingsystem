@@ -9,6 +9,7 @@ import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.service.FareCalculatorService;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import junit.framework.Assert;
@@ -35,6 +36,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -42,15 +44,9 @@ import static org.assertj.core.api.BDDAssumptions.given;
 import static org.mockito.Mockito.when;
 import org.assertj.db.type.Source;
 import org.assertj.db.type.DateValue;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
-import org.testcontainers.junit.jupiter.Container;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.ContainerLaunchException;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
@@ -59,12 +55,7 @@ public class ParkingDataBaseIT {
     private static ParkingSpotDAO parkingSpotDAO;
     private static TicketDAO ticketDAO;
     private static DataBasePrepareService dataBasePrepareService;
-
-    /*@Container
-    private MySQLContainer mySql1 = new MySQLContainer()
-            .withDatabaseName("prod")
-            .withUsername("root")
-            .withPassword("Morgan1898");*/
+    private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
 
     @Mock
     private static InputReaderUtil inputReaderUtil;
@@ -91,30 +82,35 @@ public class ParkingDataBaseIT {
     }
 
     @Test
+    @Order(1)
     public void testParkingACar() throws SQLException {
         //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
-        /* SELECT available FROM parking
-           SELECT vehicle_reg_number FROM ticket
-         */
+        // SELECT available FROM parking
+        // SELECT vehicle_reg_number FROM ticket
+
         Ticket ticketFromBase = ticketDAO.getTicket("ABCDEF");
 
         assertNotNull(ticketFromBase);
     }
 
     @Test
+    @Order(2)
     public void testParkingLotExit() throws SQLException {
         // Given
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
-        /*
-        given(price.table && out_Time.table)
-        when(available.parking.isFalse())
-        then((price.table && out_Time).shouldBeSavedIn(table, parking))
-         */
+
+        // When price of the ticket is calculated and out date time recorded from database.
+        Ticket ticketFromBase = ticketDAO.getTicket("ABCDEF");
+        fareCalculatorService.calculateFare(ticketFromBase);
+
+        // Then assert that ticket price and ticket out time are not null in database.
+        assertNotNull(ticketFromBase.getPrice());
+        assertNotNull(ticketFromBase.getOutTime());
     }
 
 }

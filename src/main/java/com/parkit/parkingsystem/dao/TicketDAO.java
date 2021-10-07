@@ -86,4 +86,20 @@ public class TicketDAO {
         }
         return false;
     }
+
+    public boolean isRecurrentUser(String vehicleRegNumber) {
+        Connection con = null;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.RECURRENT_USER); // récupérer recurrent_user
+            ps.setString(1, vehicleRegNumber);
+            ps.execute();
+            return true;
+        }catch (Exception ex){
+            logger.error("Error saving ticket info",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return false;
+    }
 }
