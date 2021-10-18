@@ -11,8 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssumptions.given;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
@@ -169,31 +171,38 @@ public class FareCalculatorServiceTest {
 
     @Test
     public void itShouldCalculateFareCarRecurrentUser() {
-        // Given a user
+        // Given a parking place for a car:
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - (30 * 30 * 1000) );
+        Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-        given(parkingSpot.equals(ticket));
+
         // When plate number is present one time in DB
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
 
         // Then assert that this user has received 5% discount on fare
-
-        /*
-        given(type.parking == car)
-        given(vehicle_reg_number.ticket.isPresentOneTime())
-        when(ticket.(price * (out_time - in_time)))
-        then(price * (1 - 0.05))
-         */
-
+        assertEquals( (1 - 0.05) * Fare.CAR_RATE_PER_HOUR, ticket.getPrice() );
     }
 
     @Test
     public void itShouldCalculateFareBikeRecurrentUser() {
-        /*
-        given(type.parking == bike)
-        given(vehicle_reg_number.ticket.isPresentOneTime())
-        when(ticket.(price * (out_time - in_time)))
-        then(price * (1 - 0.05))
-         */
+        // Given a parking place for a bike:
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - (30 * 30 * 1000) );
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
+        // When plate number is present one time in DB
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+
+        // Then assert that this user has received 5% discount on fare
+        assertEquals( (1 - 0.05) * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice() );
     }
 
 }

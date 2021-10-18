@@ -58,4 +58,15 @@ public class ParkingServiceTest {
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
 
+    // TODO: faire une simulation pour garer une voiture (préparer le jeu de données en appellant le service ParkingService
+    @Test
+    public void itShouldParkACar() {
+
+    }
+
+    @Test
+    public void itShouldParkABike() {
+
+    }
+
 }

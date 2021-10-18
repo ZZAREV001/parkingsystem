@@ -19,13 +19,13 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
         }
 
-        long inHour = ticket.getInTime().getTime() / 1000 / 60;
+        long inHour = ticket.getInTime().getTime() / 1000 / 60;    // Divide by 1000 ms and 60 s in order to avoid errors when calculating duration
         long outHour = ticket.getOutTime().getTime() / 1000 / 60;
         TicketDAO ticketDAO = new TicketDAO();
 
         //TODO: Some tests are failing here. Need to check if this logic is correct (remark: do not create new methods, all code should be here)
         long duration = outHour - inHour;
-        // Utiliser la nouvelle méthode isRecurrentUser() de la couche DAO pour tester si l'utilisateur est récurrent (si > 1 retourner true sinon retourner 1).
+        Ticket obtainRegNumber = new Ticket();
 
         if (duration <= 30) {
             ticket.setPrice(0);
@@ -42,8 +42,11 @@ public class FareCalculatorService {
                 default:
                     throw new IllegalArgumentException("Unknown Parking Type");
             }
+            if (ticketDAO.isRecurrentUser(ticket.getVehicleRegNumber())) {
+                // calculate price of the ticket with a reduction
+                ticket.setPrice(ticket.getPrice() * (1 - 0.95));
+            }
         }
-
     }
 
 }

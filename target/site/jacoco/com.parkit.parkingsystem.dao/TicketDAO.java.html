@@ -13,11 +13,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 
-<span class="nc" id="L16">public class TicketDAO {</span>
+<span class="fc" id="L16">public class TicketDAO {</span>
 
 <span class="fc" id="L18">    private static final Logger logger = LogManager.getLogger(&quot;TicketDAO&quot;);</span>
 
-<span class="nc" id="L20">    public DataBaseConfig dataBaseConfig = new DataBaseConfig();</span>
+<span class="fc" id="L20">    public DataBaseConfig dataBaseConfig = new DataBaseConfig();</span>
 
     public boolean saveTicket(Ticket ticket){
 <span class="nc" id="L23">        Connection con = null;</span>
@@ -85,6 +85,22 @@ import java.sql.Timestamp;
 <span class="nc" id="L85">            dataBaseConfig.closeConnection(con);</span>
         }
 <span class="nc" id="L87">        return false;</span>
+    }
+
+    public boolean isRecurrentUser(String vehicleRegNumber) {
+<span class="nc" id="L91">        Connection con = null;</span>
+        try {
+<span class="nc" id="L93">            con = dataBaseConfig.getConnection();</span>
+<span class="nc" id="L94">            PreparedStatement ps = con.prepareStatement(DBConstants.RECURRENT_USER); // Execute SQL code from recurrent_user (constant in DBConstants).</span>
+<span class="nc" id="L95">            ps.setString(1, vehicleRegNumber);</span>
+<span class="nc" id="L96">            ps.execute();</span>
+<span class="nc" id="L97">            return true;</span>
+<span class="nc" id="L98">        }catch (Exception ex){</span>
+<span class="nc" id="L99">            logger.error(&quot;Error in recurrent user ticket&quot;,ex);</span>
+        }finally {
+<span class="nc" id="L101">            dataBaseConfig.closeConnection(con);</span>
+        }
+<span class="nc" id="L103">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

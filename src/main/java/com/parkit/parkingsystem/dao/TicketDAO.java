@@ -89,14 +89,23 @@ public class TicketDAO {
 
     public boolean isRecurrentUser(String vehicleRegNumber) {
         Connection con = null;
+        int count = 0;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.RECURRENT_USER); // récupérer recurrent_user
+            PreparedStatement ps = con.prepareStatement(DBConstants.RECURRENT_USER); // Execute SQL query from recurrent_user (constant in DBConstants).
             ps.setString(1, vehicleRegNumber);
-            ps.execute();
-            return true;
+            ResultSet rs = ps.executeQuery(); // Capture from ResultSet the result of a SQL request
+            // Comment récupérer le résultat de la requête SQL? Tester ce résultat qui est un entier. Si > 1, retourner true sinon retourner false. Faire un if( ) pour cela.
+            while (rs.next()) {
+                count = rs.getInt("total");
+            }
+            if (count > 0) {
+                return true;
+            } else {
+                return false;
+            }
         }catch (Exception ex){
-            logger.error("Error saving ticket info",ex);
+            logger.error("Error in recurrent user ticket",ex);
         }finally {
             dataBaseConfig.closeConnection(con);
         }
