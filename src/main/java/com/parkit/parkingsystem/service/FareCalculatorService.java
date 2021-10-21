@@ -44,7 +44,7 @@ public class FareCalculatorService {
             }
             if (ticketDAO.isRecurrentUser(ticket.getVehicleRegNumber())) {
                 // calculate price of the ticket with a reduction
-                ticket.setPrice(ticket.getPrice() * (1 - 0.95));
+                ticket.setPrice(ticket.getPrice() * 0.95);
             }
         }
     }

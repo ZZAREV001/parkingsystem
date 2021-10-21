@@ -173,17 +173,18 @@ public class FareCalculatorServiceTest {
     public void itShouldCalculateFareCarRecurrentUser() {
         // Given a parking place for a car:
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (30 * 30 * 1000) );
+        inTime.setTime( System.currentTimeMillis() - (60 * 60 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
         // When plate number is present one time in DB
+        ticket.setVehicleRegNumber("ABCEDF");
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
 
-        // Then assert that this user has received 5% discount on fare
+        // Then assert that this user has received 5% discount on fare (erreur de calcul dans fare calculator service).
         assertEquals( (1 - 0.05) * Fare.CAR_RATE_PER_HOUR, ticket.getPrice() );
     }
 
@@ -191,11 +192,12 @@ public class FareCalculatorServiceTest {
     public void itShouldCalculateFareBikeRecurrentUser() {
         // Given a parking place for a bike:
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (30 * 30 * 1000) );
+        inTime.setTime( System.currentTimeMillis() - (60 * 60 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
         // When plate number is present one time in DB
+        ticket.setVehicleRegNumber("ABCEDF");
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
