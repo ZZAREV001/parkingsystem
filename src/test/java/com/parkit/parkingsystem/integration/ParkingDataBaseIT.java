@@ -87,8 +87,6 @@ public class ParkingDataBaseIT {
         //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
-        // SELECT available FROM parking
-        // SELECT vehicle_reg_number FROM ticket
 
         Ticket ticketFromBase = ticketDAO.getTicket("ABCDEF");
 
