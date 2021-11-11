@@ -95,7 +95,7 @@ import java.sql.Timestamp;
 <span class="fc" id="L95">            PreparedStatement ps = con.prepareStatement(DBConstants.RECURRENT_USER); // Execute SQL query from recurrent_user (constant in DBConstants).</span>
 <span class="fc" id="L96">            ps.setString(1, vehicleRegNumber);</span>
 <span class="fc" id="L97">            ResultSet rs = ps.executeQuery(); // Capture from ResultSet the result of a SQL request</span>
-            // Comment récupérer le résultat de la requête SQL? Tester ce résultat qui est un entier. Si &gt; 1, retourner true sinon retourner false. Faire un if( ) pour cela.
+            // How do we capture the result of a SQL query? Test if this result is an integer.If &gt; 1, return true else return false.
 <span class="fc bfc" id="L99" title="All 2 branches covered.">            while (rs.next()) {</span>
 <span class="fc" id="L100">                count = rs.getInt(&quot;total&quot;);</span>
             }

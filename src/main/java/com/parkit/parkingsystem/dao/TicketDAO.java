@@ -95,7 +95,7 @@ public class TicketDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.RECURRENT_USER); // Execute SQL query from recurrent_user (constant in DBConstants).
             ps.setString(1, vehicleRegNumber);
             ResultSet rs = ps.executeQuery(); // Capture from ResultSet the result of a SQL request
-            // Comment récupérer le résultat de la requête SQL? Tester ce résultat qui est un entier. Si > 1, retourner true sinon retourner false. Faire un if( ) pour cela.
+            // How do we capture the result of a SQL query? Test if this result is an integer.If > 1, return true else return false.
             while (rs.next()) {
                 count = rs.getInt("total");
             }
