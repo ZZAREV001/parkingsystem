@@ -184,7 +184,7 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
 
-        // Then assert that this user has received 5% discount on fare (erreur de calcul dans fare calculator service).
+        // Then assert that this user has received 5% discount on fare (error in a formula in FareCalculatorService).
         assertEquals( (1 - 0.05) * Fare.CAR_RATE_PER_HOUR, ticket.getPrice() );
     }
 

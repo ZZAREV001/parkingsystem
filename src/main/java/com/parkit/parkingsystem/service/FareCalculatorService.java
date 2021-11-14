@@ -25,7 +25,6 @@ public class FareCalculatorService {
 
         //TODO: Some tests are failing here. Need to check if this logic is correct (remark: do not create new methods, all code should be here)
         long duration = outHour - inHour;
-        Ticket obtainRegNumber = new Ticket();
 
         if (duration <= 30) {
             ticket.setPrice(0);
