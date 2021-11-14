@@ -86,4 +86,29 @@ public class TicketDAO {
         }
         return false;
     }
+
+    public boolean isRecurrentUser(String vehicleRegNumber) {
+        Connection con = null;
+        int count = 0;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.RECURRENT_USER); // Execute SQL query from recurrent_user (constant in DBConstants).
+            ps.setString(1, vehicleRegNumber);
+            ResultSet rs = ps.executeQuery(); // Capture from ResultSet the result of a SQL request
+            // How do we capture the result of a SQL query? Test if this result is an integer.If > 1, return true else return false.
+            while (rs.next()) {
+                count = rs.getInt("total");
+            }
+            if (count > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception ex){
+            logger.error("Error in recurrent user ticket",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return false;
+    }
 }

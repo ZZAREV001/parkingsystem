@@ -2,6 +2,7 @@ package com.parkit.parkingsystem;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
@@ -9,7 +10,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.assertj.core.api.BDDAssumptions.given;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
@@ -61,7 +66,7 @@ public class FareCalculatorServiceTest {
     }
 
     @Test
-    public void calculateFareUnkownType(){
+    public void calculateFareUnknownType(){
         Date inTime = new Date();
         inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
         Date outTime = new Date();
@@ -129,76 +134,77 @@ public class FareCalculatorServiceTest {
     }
 
     @Test
-    public void calculateFareCareLess30min() {
-        // Arrange
+    public void itShouldCalculateFareCarLess30min() {
+        // Given time initialization for a car
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (30 * 24 * 1000) );
+        inTime.setTime( System.currentTimeMillis() - (30 * 30 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
-        // Act
+        // When time and parking spot are set
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
 
         // Assert
-        assertEquals( 0, ticket.getPrice());
+        assertEquals( 0 , ticket.getPrice());
     }
 
     @Test
-    public void calculateFareBikeLess30min() {
-        // Arrange
+    public void itShouldCalculateFareBikeLess30min() {
+        // Given time initialization for a bike
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (30 * 24 * 1000) );
+        inTime.setTime( System.currentTimeMillis() - (30 * 30 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
-        // Act
+        // When time and parking spot are set
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
 
         // Assert
-        assertEquals(0, ticket.getPrice());
+        assertEquals( 0 , ticket.getPrice());
     }
 
     @Test
-    public void calculateFareCarRecurrentUser () {
-        // Act
+    public void itShouldCalculateFareCarRecurrentUser() {
+        // Given a parking place for a car:
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
+        inTime.setTime( System.currentTimeMillis() - (60 * 60 * 1000) );
         Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
-        // Arrange ticket and fare
+        // When plate number is present one time in DB
+        ticket.setVehicleRegNumber("ABCEDF");
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
 
-        // Assert price ticket and fare
-        assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR * (1 - 0.05));
-
+        // Then assert that this user has received 5% discount on fare (error in a formula in FareCalculatorService).
+        assertEquals( (1 - 0.05) * Fare.CAR_RATE_PER_HOUR, ticket.getPrice() );
     }
 
     @Test
-    public void calculateFareBikeRecurrentUser () {
-        // Act
+    public void itShouldCalculateFareBikeRecurrentUser() {
+        // Given a parking place for a bike:
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
+        inTime.setTime( System.currentTimeMillis() - (60 * 60 * 1000) );
         Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
-        // Arrange ticket and fare
+        // When plate number is present one time in DB
+        ticket.setVehicleRegNumber("ABCEDF");
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
 
-        // Assert price ticket and fare
-        assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR * (1 - 0.05));
+        // Then assert that this user has received 5% discount on fare
+        assertEquals( (1 - 0.05) * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice() );
     }
 
 }

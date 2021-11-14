@@ -54,6 +54,7 @@ public class ParkingServiceTest {
 
     @Test
     public void processExitingVehicleTest(){
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
         parkingService.processExitingVehicle();
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
